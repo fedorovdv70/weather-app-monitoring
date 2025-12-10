@@ -1,0 +1,70 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "weather-app-monitoring",
+    "title": "Weather App Monitoring",
+    "tags": ["flask", "weather", "docker"],
+    "timezone": "browser",
+    "schemaVersion": 38,
+    "refresh": "10s",
+    "panels": [
+      {
+        "type": "stat",
+        "title": "Application Status",
+        "gridPos": { "h": 5, "w": 6, "x": 0, "y": 0 },
+        "targets": [
+          {
+            "expr": "up{job=\"weather-app\"}",
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "red", "value": null },
+                { "color": "green", "value": 1 }
+              ]
+            },
+            "mappings": [
+              { "type": 1, "options": { "1": { "text": "UP", "color": "green" }}},
+              { "type": 1, "options": { "0": { "text": "DOWN", "color": "red" }}}
+            ]
+          }
+        }
+      },
+      {
+        "type": "timeseries",
+        "title": "HTTP Requests per second",
+        "gridPos": { "h": 8, "w": 9, "x": 6, "y": 0 },
+        "targets": [
+          {
+            "expr": "rate(flask_http_request_total[1m])",
+            "legendFormat": "{{method}} {{status}}",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "type": "timeseries",
+        "title": "Request Latency (95th percentile)",
+        "gridPos": { "h": 8, "w": 9, "x": 15, "y": 0 },
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(flask_http_request_duration_seconds_bucket[5m])) by (le))",
+            "legendFormat": "95th percentile",
+            "refId": "A"
+          }
+        ],
+        "unit": "s"
+      }
+    ],
+    "templating": { "list": [] },
+    "annotations": { "list": [] },
+    "version": 1
+  },
+  "folderId": 0,
+  "overwrite": true
+}
