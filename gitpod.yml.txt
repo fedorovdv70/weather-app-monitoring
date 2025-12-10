@@ -1,0 +1,13 @@
+image: gitpod/workspace-full
+tasks:
+  - init: echo "Готово"
+    command: |
+      echo "Запускаем приложение..."
+      docker-compose up -d
+ports:
+  - port: 8000
+    onOpen: open-preview
+  - port: 3000
+    onOpen: open-preview
+  - port: 9090
+    onOpen: open-preview
